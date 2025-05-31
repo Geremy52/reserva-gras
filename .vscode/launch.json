@@ -1,0 +1,20 @@
+{
+  // Use IntelliSense para saber los atributos posibles.
+  // Mantenga el puntero para ver las descripciones de los existentes atributos.
+  // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Abrir index.html",
+      "file": "c:/Users/Usuario/Documents/UNAJMA/2025-I/reservas-grass/index.html"
+    },
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Abrir admin.html",
+      "file": "c:/Users/Usuario/Documents/UNAJMA/2025-I/reservas-grass/admin.html"
+    }
+  ]
+}
