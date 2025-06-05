@@ -13,7 +13,6 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      /* Textura sutil tipo césped con ruido (puedes usar un patrón de fondo) */
       background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
       background-size: 20px 20px;
     }
@@ -28,14 +27,14 @@
       font-size: 2rem;
       letter-spacing: 2px;
       margin: 0;
-      color: #d0f0c0; /* Verde claro para contraste */
+      color: #d0f0c0;
       text-shadow: 1px 1px 2px #003300;
     }
     main {
       flex-grow: 1;
       padding: 2rem;
-      background-color: #e6f2e6; /* Fondo claro para contenido */
-      color: #003300; /* Texto oscuro */
+      background-color: #e6f2e6;
+      color: #003300;
       border-radius: 12px;
       max-width: 1100px;
       margin: 2rem auto;
@@ -73,71 +72,79 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1>Reserva Grass Deportivo Grass-Hepsu</h1>
-  </header>
-  <main>
-    <h2 class="text-center mb-3">Reservas del Grass Deportivo</h2>
-    <p class="subtitle">Elige tu día y hora para reservar la cancha. ¡Fácil y rápido!</p>
-    <div id="horario" class="table-responsive"></div>
-  </main>
-  <footer>
-    &copy; 2025 Reserva Grass Deportivo | Contacto: info@grassdeportivo.com
-  </footer>
 
-  <!-- Firebase y lógica -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+<!-- ⚠️ Verificación de sesión antes de mostrar contenido -->
+<script>
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "login.html"; // Redirige si no ha iniciado sesión
+  }
+</script>
 
-    const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_PROJECT.firebaseapp.com",
-      projectId: "TU_PROJECT",
-      storageBucket: "TU_PROJECT.appspot.com",
-      messagingSenderId: "",
-      appId: ""
-    };
+<header>
+  <h1>Reserva Grass Deportivo Grass-Hepsu</h1>
+</header>
+<main>
+  <h2 class="text-center mb-3">Reservas del Grass Deportivo</h2>
+  <p class="subtitle">Elige tu día y hora para reservar la cancha. ¡Fácil y rápido!</p>
+  <div id="horario" class="table-responsive"></div>
+</main>
+<footer>
+  &copy; 2025 Reserva Grass Deportivo | Contacto: info@grassdeportivo.com
+</footer>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+<!-- Firebase y lógica -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-    const horas = Array.from({length: 15}, (_, i) => `${i + 9}:00`);
-    const horarioDiv = document.getElementById('horario');
+  const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROJECT.firebaseapp.com",
+    projectId: "TU_PROJECT",
+    storageBucket: "TU_PROJECT.appspot.com",
+    messagingSenderId: "",
+    appId: ""
+  };
 
-    async function renderHorario() {
-      const reservasSnap = await getDocs(collection(db, "reservas"));
-      const reservas = {};
-      reservasSnap.forEach(doc => {
-        const data = doc.data();
-        reservas[`${data.dia}_${data.hora}`] = true;
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  const horas = Array.from({length: 15}, (_, i) => `${i + 9}:00`);
+  const horarioDiv = document.getElementById('horario');
+
+  async function renderHorario() {
+    const reservasSnap = await getDocs(collection(db, "reservas"));
+    const reservas = {};
+    reservasSnap.forEach(doc => {
+      const data = doc.data();
+      reservas[`${data.dia}_${data.hora}`] = true;
+    });
+
+    let html = '<table class="table table-bordered text-center"><thead class="table-success"><tr><th>Hora</th>';
+    dias.forEach(d => html += `<th>${d}</th>`);
+    html += '</tr></thead><tbody>';
+
+    horas.forEach(hora => {
+      html += `<tr><th>${hora}</th>`;
+      dias.forEach(dia => {
+        const key = `${dia}_${hora}`;
+        const reservado = reservas[key];
+        html += `<td><button class="btn btn-sm horario-btn ${reservado ? 'btn-danger reservado' : 'btn-success'}"
+                  ${reservado ? 'disabled' : ''}
+                  onclick="window.location.href='pago.html?dia=${encodeURIComponent(dia)}&hora=${encodeURIComponent(hora)}'">
+                  ${reservado ? 'Reservado' : 'Reservar'}</button></td>`;
       });
+      html += '</tr>';
+    });
 
-      let html = '<table class="table table-bordered text-center"><thead class="table-success"><tr><th>Hora</th>';
-      dias.forEach(d => html += `<th>${d}</th>`);
-      html += '</tr></thead><tbody>';
+    html += '</tbody></table>';
+    horarioDiv.innerHTML = html;
+  }
 
-      horas.forEach(hora => {
-        html += `<tr><th>${hora}</th>`;
-        dias.forEach(dia => {
-          const key = `${dia}_${hora}`;
-          const reservado = reservas[key];
-          html += `<td><button class="btn btn-sm horario-btn ${reservado ? 'btn-danger reservado' : 'btn-success'}"
-                    ${reservado ? 'disabled' : ''}
-                    onclick="window.location.href='pago.html?dia=${encodeURIComponent(dia)}&hora=${encodeURIComponent(hora)}'">
-                    ${reservado ? 'Reservado' : 'Reservar'}</button></td>`;
-        });
-        html += '</tr>';
-      });
+  renderHorario();
+</script>
 
-      html += '</tbody></table>';
-      horarioDiv.innerHTML = html;
-    }
-
-    renderHorario();
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -64,7 +64,8 @@
     // Validación simple
     if (email === "yeremy456" && password === "123456789") {
       alert("Bienvenido Yeremy 👋");
-      window.location.href = "index.html"; // Redirige a la página de reservas
+      localStorage.setItem("isLoggedIn", "true"); // Guardar sesión
+      window.location.href = "index.html"; // Redirige a la página principal
     } else {
       alert("Usuario o contraseña incorrectos");
     }
