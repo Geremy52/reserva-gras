@@ -1,21 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Reserva Grass Deportivo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Enlace al archivo de estilos externos -->
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Reserva Grass Deportivo Grass-Hepsu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Fondo verde tipo césped con degradado y textura */
+    body {
+      background: linear-gradient(135deg, #2c6e2c 0%, #4caf50 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      /* Textura sutil tipo césped con ruido (puedes usar un patrón de fondo) */
+      background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    header {
+      padding: 1.5rem 2rem;
+      background-color: rgba(0, 50, 0, 0.7);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      border-radius: 0 0 10px 10px;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      margin: 0;
+      color: #d0f0c0; /* Verde claro para contraste */
+      text-shadow: 1px 1px 2px #003300;
+    }
+    main {
+      flex-grow: 1;
+      padding: 2rem;
+      background-color: #e6f2e6; /* Fondo claro para contenido */
+      color: #003300; /* Texto oscuro */
+      border-radius: 12px;
+      max-width: 1100px;
+      margin: 2rem auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .subtitle {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      font-size: 1.2rem;
+      color: #2e7d32;
+    }
+    table.table {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn.horario-btn {
+      min-width: 100px;
+      font-weight: 600;
+      transition: transform 0.2s ease;
+    }
+    .btn.horario-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #d0f0c0;
+      background: rgba(0, 50, 0, 0.7);
+      margin-top: auto;
+      border-radius: 10px 10px 0 0;
+    }
+  </style>
 </head>
 <body>
-  <div class="container mt-5">
-    <h2 class="text-center mb-4">Reservas del Grass Deportivo</h2>
+  <header>
+    <h1>Reserva Grass Deportivo Grass-Hepsu</h1>
+  </header>
+  <main>
+    <h2 class="text-center mb-3">Reservas del Grass Deportivo</h2>
+    <p class="subtitle">Elige tu día y hora para reservar la cancha. ¡Fácil y rápido!</p>
     <div id="horario" class="table-responsive"></div>
-  </div>
+  </main>
+  <footer>
+    &copy; 2025 Reserva Grass Deportivo | Contacto: info@grassdeportivo.com
+  </footer>
 
   <!-- Firebase y lógica -->
   <script type="module">
@@ -46,7 +114,7 @@
         reservas[`${data.dia}_${data.hora}`] = true;
       });
 
-      let html = '<table class="table table-bordered text-center"><thead><tr><th>Hora</th>';
+      let html = '<table class="table table-bordered text-center"><thead class="table-success"><tr><th>Hora</th>';
       dias.forEach(d => html += `<th>${d}</th>`);
       html += '</tr></thead><tbody>';
 
@@ -70,7 +138,6 @@
     renderHorario();
   </script>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
